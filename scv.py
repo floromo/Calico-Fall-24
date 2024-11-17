@@ -14,8 +14,6 @@ def solve(M: int, N: int, G: list) -> str:
 
     # Check if each row has exactly M columns and count '#' characters
     for row in G:
-        if len(row) != M:  # Validate the row length
-            return "invalid"
         rowCount.append(row.count('#'))
 
     # Remove rows that have no '#' characters
@@ -23,7 +21,8 @@ def solve(M: int, N: int, G: list) -> str:
 
     # Check if all row counts are the same (rectangle)
     if all(count == rowCount[0] for count in rowCount):
-        return "ferb"
+        print("ferb")
+        return
     
     # Check if the shape is a triangle by checking for increasing or decreasing pattern
     isIncreasing = True
@@ -39,7 +38,8 @@ def solve(M: int, N: int, G: list) -> str:
             break
 
     if isIncreasing or isDecreasing:
-        return "phineas"
+        print("phineas")
+        return
 
 def main():
     T = int(input())
