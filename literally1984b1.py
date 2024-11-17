@@ -1,33 +1,36 @@
 from fractions import Fraction
+import heapq
 
 def solve(N: int) -> tuple[int, int]:
-    houses = []
-    slopes = set()
+    """
+    Return a tuple containing the coordinates X and Y for the given address N.
+    """
+    def findHouseCoord(N):
+        # Generate possible coordinates and filter based on visibility
+        slopes = set()
 
-    x = 1
-    while len(houses) < N:
-        for y in range(1, x + 1):
-            slope = Fraction(y, x)
-            if slope not in slopes:
-                houses.append((x, y))
-                slopes.add(slope)
-        x += 1
+        # priority queue
+        pq = []
+        limit = 200000
 
-    # Define sorting key functions for Manhattan distance and x-coordinate
-    def manhattan_distance(point):
-        x, y = point
-        return x + y
+        for x in range(1, limit + 1):
+            for y in range(1, limit + 1):
+                slope = Fraction(y, x)
 
-    def sorting_key(point):
-        distance = manhattan_distance(point)
-        x = point[0]
-        return (distance, x)
+                # If this slope hasn't been encountered before, it's visible (another house/coord isnt blocking it)
+                if slope not in slopes:
+                    distance = x+y
+                    heapq.heappush(pq, (distance,x,y)) # manhattan distance, x, y
+                    slopes.add(slope)
 
-    # Sort houses by Manhattan distance and then by x-coordinate
-    houses.sort(key=sorting_key)
+        # Define sorting key functions
+        for _ in range(N):
+            _, x, y = heapq.heappop(pq)
 
-    # Return the N-th house's coordinates (1-indexed)
-    return houses[N - 1]
+        return (x,y)
+    
+    # Get the coordinates for address N
+    return findHouseCoord(N)
 
 def main():
     T = int(input())
